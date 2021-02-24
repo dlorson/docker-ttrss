@@ -48,7 +48,7 @@ setup_ttrss()
     fi
 
     if [ -z "$TTRSS_PATH" ]; then
-    	TTRSS_PATH=/var/www/ttrss
+    	TTRSS_PATH=/var/www/ttrss/
     fi
 
     TTRSS_PATH_THEMES=${TTRSS_PATH}/themes.local
