@@ -20,17 +20,17 @@ function error($text)
 function dbconnect($config)
 {
     $map = array('host' => 'HOST', 'port' => 'PORT', 'dbname' => 'NAME', 'user' => 'USER', 'password' => 'PASS');
-    $dsn = $config['TTRSS_DB_TYPE'] . ':';
+    $dsn = $config['DB_TYPE'] . ':';
     foreach ($map as $d => $h) {
-        if (isset($config['TTRSS_DB_' . $h])) {
-            $dsn .= $d . '=' . $config['TTRSS_DB_' . $h] . ';';
+        if (isset($config['DB_' . $h])) {
+            $dsn .= $d . '=' . $config['DB_' . $h] . ';';
         }
     }
     echo($dsn);
-    if ($config['TTRSS_DB_TYPE'] == 'pgsql'){
+    if ($config['DB_TYPE'] == 'pgsql'){
         $pdo = new \PDO($dsn);
     } else {
-        $pdo = new \PDO($dsn, $config['TTRSS_DB_USER'], $config['TTRSS_DB_PASS']);
+        $pdo = new \PDO($dsn, $config['DB_USER'], $config['DB_PASS']);
     }
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $pdo;

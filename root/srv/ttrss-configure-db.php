@@ -10,7 +10,7 @@ $conffile = $confpath . 'config.php';
 $ename = 'DB';
 $eport = 5432;
 
-$db_type = env('TTRSS_DB_TYPE','pgsql');
+$db_type = env('DB_TYPE','pgsql');
 if ($db_type == 'mysql'){
     $eport = 3306;
 }
@@ -25,18 +25,19 @@ if (!env($ename . '_PORT', '')) {
 $config = array();
 
 $config['SELF_URL_PATH'] = env('SELF_URL_PATH', 'http://localhost');
+$config['_SKIP_SELF_URL_PATH_CHECKS'] = true
 
-$config['TTRSS_DB_TYPE'] = $db_type;
-$config['TTRSS_DB_HOST'] = env($ename . '_PORT_' . $eport . '_TCP_ADDR');
-$config['TTRSS_DB_PORT'] = env($ename . '_PORT_' . $eport . '_TCP_PORT');
+$config['DB_TYPE'] = $db_type;
+$config['DB_HOST'] = env($ename . '_PORT_' . $eport . '_TCP_ADDR');
+$config['DB_PORT'] = env($ename . '_PORT_' . $eport . '_TCP_PORT');
 
 // database credentials for this instance
 //   database name (DB_NAME) can be supplied or detaults to "ttrss"
 //   database user (DB_USER) can be supplied or defaults to database name
 //   database pass (DB_PASS) can be supplied or defaults to database user
-$config['TTRSS_DB_NAME'] = env($ename . '_NAME', 'ttrss');
-$config['TTRSS_DB_USER'] = env($ename . '_USER', $config['TTRSS_DB_NAME']);
-$config['TTRSS_DB_PASS'] = env($ename . '_PASS', $config['TTRSS_DB_USER']);
+$config['DB_NAME'] = env($ename . '_NAME', 'ttrss');
+$config['DB_USER'] = env($ename . '_USER', $config['DB_NAME']);
+$config['DB_PASS'] = env($ename . '_PASS', $config['DB_USER']);
 
 if (!dbcheck($config)) {
     echo 'Database login failed, trying to create ...' . PHP_EOL;
@@ -46,13 +47,13 @@ if (!dbcheck($config)) {
 
     $super = $config;
 
-    $super['TTRSS_DB_NAME'] = null;
-    $super['TTRSS_DB_USER'] = env($ename . '_ENV_USER', 'docker');
-    $super['TTRSS_DB_PASS'] = env($ename . '_ENV_PASS', $super['TTRSS_DB_USER']);
+    $super['DB_NAME'] = null;
+    $super['DB_USER'] = env($ename . '_ENV_USER', 'docker');
+    $super['DB_PASS'] = env($ename . '_ENV_PASS', $super['DB_USER']);
 
     $pdo = dbconnect($super);
-    $pdo->exec('CREATE ROLE ' . ($config['TTRSS_DB_USER']) . ' WITH LOGIN PASSWORD ' . $pdo->quote($config['TTRSS_DB_PASS']));
-    $pdo->exec('CREATE DATABASE ' . ($config['TTRSS_DB_NAME']) . ' WITH OWNER ' . ($config['TTRSS_DB_USER']));
+    $pdo->exec('CREATE ROLE ' . ($config['DB_USER']) . ' WITH LOGIN PASSWORD ' . $pdo->quote($config['DB_PASS']));
+    $pdo->exec('CREATE DATABASE ' . ($config['DB_NAME']) . ' WITH OWNER ' . ($config['DB_USER']));
     unset($pdo);
 
     if (dbcheck($config)) {
@@ -75,7 +76,7 @@ try {
 }
 catch (PDOException $e) {
     echo 'Database table not found, applying schema... ' . PHP_EOL;
-    $schema = file_get_contents($confpath . 'schema/ttrss_schema_' . $config['TTRSS_DB_TYPE'] . '.sql');
+    $schema = file_get_contents($confpath . 'schema/ttrss_schema_' . $config['DB_TYPE'] . '.sql');
     $schema = preg_replace('/--(.*?);/', '', $schema);
     $schema = preg_replace('/[\r\n]/', ' ', $schema);
     $schema = trim($schema, ' ;');

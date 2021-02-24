@@ -148,6 +148,4 @@ setup_db
 echo "Setup: Applying updates ..."
 /srv/update-ttrss.sh --no-start
 
-cat /var/www/ttrss/config.php
-
 echo "Setup: Done"
