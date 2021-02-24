@@ -25,7 +25,6 @@ if (!env($ename . '_PORT', '')) {
 $config = array();
 
 $config['SELF_URL_PATH'] = env('SELF_URL_PATH', 'http://localhost');
-$config['_SKIP_SELF_URL_PATH_CHECKS'] = true
 
 $config['DB_TYPE'] = $db_type;
 $config['DB_HOST'] = env($ename . '_PORT_' . $eport . '_TCP_ADDR');
