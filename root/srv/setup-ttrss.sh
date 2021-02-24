@@ -69,8 +69,8 @@ setup_ttrss()
 
         mkdir -p ${TTRSS_PATH_PLUGINS}
         git clone --depth=1 https://github.com/sepich/tt-rss-mobilize.git ${TTRSS_PATH_PLUGINS}/mobilize
-        git clone --depth=1 https://github.com/m42e/ttrss_plugin-feediron.git ${TTRSS_PATH_PLUGINS}/feediron
         git clone --depth=1 https://github.com/DigitalDJ/tinytinyrss-fever-plugin ${TTRSS_PATH_PLUGINS}/fever
+        git clone --depth=1 https://github.com/feediron/ttrss_plugin-feediron.git ${TTRSS_PATH_PLUGINS}/feediron
 
         mkdir -p ${TTRSS_PATH_THEMES}
         git clone --depth=1 https://github.com/levito/tt-rss-feedly-theme.git ${TTRSS_PATH_THEMES}/levito-feedly-git
@@ -109,8 +109,13 @@ setup_ttrss()
 
     echo "Setup: URL is: $TTRSS_SELF_URL"
 
+    # By default we want to reset the theme to the default one.
+    if [ -z ${TTRSS_THEME_RESET} ]; then
+        TTRSS_THEME_RESET=1
+    fi
+
     # Patch URL path.
-    sed -i -e 's@htt.*/@'"${TTRSS_SELF_URL}"'@g' ${TTRSS_PATH}/config.php
+    sed -i -e "s@define('SELF_URL_PATH'.*@define('SELF_URL_PATH', '$TTRSS_SELF_URL');@g" ${TTRSS_PATH}/config.php
 
     # Check if single user mode is selected
     if [ "$TTRSS_SINGLEUSER" = true ]; then
@@ -132,6 +137,11 @@ setup_ttrss()
     echo "Setup: Additional plugins: $TTRSS_PLUGINS"
 
     sed -i -e "s/.*define('PLUGINS'.*/define('PLUGINS', '$TTRSS_PLUGINS, auth_internal, note, updater');/g" ${TTRSS_PATH}/config.php
+
+    # Export variables for sub shells.
+    export TTRSS_PATH
+    export TTRSS_PATH_PLUGINS
+    export TTRSS_THEME_RESET
 }
 
 setup_db()

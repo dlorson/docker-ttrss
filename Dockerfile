@@ -1,6 +1,6 @@
 # Using https://github.com/gliderlabs/docker-alpine,
 # plus  https://github.com/just-containers/s6-overlay for a s6 Docker overlay.
-FROM gliderlabs/alpine:3.6
+FROM alpine:3.10.1
 # Initially was based on work of Christian Lück <christian@lueck.tv>.
 LABEL description="A complete, self-hosted Tiny Tiny RSS (TTRSS) environment." \
       maintainer="Andreas Löffler <andy@x86dev.com>"
@@ -39,6 +39,6 @@ ENV DB_USER ttrss
 ENV DB_PASS ttrss
 
 # Clean up.
-RUN set -xe && apk del --progress --purge && rm -rf /var/cache/apk/*
+RUN set -xe && apk del --progress --purge && rm -rf /var/cache/apk/* && rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT ["/init"]

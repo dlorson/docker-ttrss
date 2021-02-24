@@ -3,8 +3,7 @@
 
 include '/srv/ttrss-utils.php';
 
-if (!env('TTRSS_PATH', ''))
-    $confpath = '/var/www/ttrss/';
+$confpath = env('TTRSS_PATH', '/var/www/ttrss/');
 $conffile = $confpath . 'config.php';
 
 $ename = 'DB';
@@ -69,10 +68,12 @@ try {
     echo 'Connection to database successful' . PHP_EOL;
     // Reached this point => table found, assume db is complete
 
-    // Make sure to set the default theme provided by TT-RSS.
-    // Other themes might break everything after an update, so play safe here.
-    echo 'Resetting theme to default ...' . PHP_EOL;
-    $pdo->query("UPDATE ttrss_user_prefs SET value = '' WHERE pref_name = 'USER_CSS_THEME'");
+    if (env('TTRSS_THEME_RESET', '1')) {
+        // Make sure to set the default theme provided by TT-RSS.
+        // Other themes might break everything after an update, so play safe here.
+        echo 'Resetting theme to default ...' . PHP_EOL;
+        $pdo->query("UPDATE ttrss_user_prefs SET value = '' WHERE pref_name = 'USER_CSS_THEME'");
+    }
 }
 catch (PDOException $e) {
     echo 'Database table not found, applying schema... ' . PHP_EOL;
