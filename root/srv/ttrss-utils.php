@@ -20,7 +20,7 @@ function error($text)
 function dbconnect($config)
 {
     $map = array('host' => 'HOST', 'port' => 'PORT', 'dbname' => 'NAME', 'user' => 'USER', 'password' => 'PASS');
-    $dsn = $config['DB_TYPE'] . ':';
+    $dsn = $config['TTRSS_DB_TYPE'] . ':';
     foreach ($map as $d => $h) {
         if (isset($config['TTRSS_DB_' . $h])) {
             $dsn .= $d . '=' . $config['TTRSS_DB_' . $h] . ';';
