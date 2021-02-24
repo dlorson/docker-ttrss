@@ -6,7 +6,7 @@ include '/srv/ttrss-utils.php';
 $ename = 'DB';
 $eport = 5432;
 
-$db_type = env('DB_TYPE','pgsql');
+$db_type = env('TTRSS_DB_TYPE','pgsql');
 if ($db_type == 'mysql'){
     $eport = 3306;
 }
@@ -18,17 +18,17 @@ if (!env($ename . '_PORT', '')) {
 }
 
 $config = array();
-$config['DB_TYPE'] = $db_type;
-$config['DB_HOST'] = env($ename . '_PORT_' . $eport . '_TCP_ADDR');
-$config['DB_PORT'] = env($ename . '_PORT_' . $eport . '_TCP_PORT');
+$config['TTRSS_DB_TYPE'] = $db_type;
+$config['TTRSS_DB_HOST'] = env($ename . '_PORT_' . $eport . '_TCP_ADDR');
+$config['TTRSS_DB_PORT'] = env($ename . '_PORT_' . $eport . '_TCP_PORT');
 
 // database credentials for this instance
 //   database name (DB_NAME) can be supplied or detaults to "ttrss"
 //   database user (DB_USER) can be supplied or defaults to database name
 //   database pass (DB_PASS) can be supplied or defaults to database user
-$config['DB_NAME'] = env($ename . '_NAME', 'ttrss');
-$config['DB_USER'] = env($ename . '_USER', $config['DB_NAME']);
-$config['DB_PASS'] = env($ename . '_PASS', $config['DB_USER']);
+$config['TTRSS_DB_NAME'] = env($ename . '_NAME', 'ttrss');
+$config['TTRSS_DB_USER'] = env($ename . '_USER', $config['TTRSS_DB_NAME']);
+$config['TTRSS_DB_PASS'] = env($ename . '_PASS', $config['TTRSS_DB_USER']);
 
 $pdo = dbconnect($config);
 try {
