@@ -10,7 +10,7 @@ $conffile = $confpath . 'config.php';
 $ename = 'DB';
 $eport = 5432;
 
-$db_type = env('DB_TYPE','pgsql');
+$db_type = env('TTRSS_DB_TYPE','pgsql');
 if ($db_type == 'mysql'){
     $eport = 3306;
 }
